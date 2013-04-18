@@ -1,7 +1,18 @@
 exports.leveldown = function(location){
-	 level = {};
+	 var level = {};
 	 var db = {};
      var dbdetails = "default";
+     // Use the last item in the path as the database name 
+     var paths = location.split('/');
+        if(paths.length == 1){
+            paths = location.split('\\');
+        }
+
+        if(paths.length > 1)
+        {
+            dbdetails = paths.pop();                
+        }
+        
 	 if (typeof module !== 'undefined' && module.exports) {
             db = require('./test/phonegap-storage-mock.js');
     } else {
@@ -12,9 +23,11 @@ exports.leveldown = function(location){
         var cb;
 
         switch(arguments.length){
+
             case 0 :
                 throw new Error("open() requires a callback argument");
             break;
+
             case 1 :
                 if(typeof arguments[0] != 'function')        
                     throw new Error("open() requires a callback argument");
@@ -58,28 +71,19 @@ exports.leveldown = function(location){
         cb();
         
         //Parse out for windows tests
-        var paths = location.split('/');
-        
-
-        if(paths.length == 1){
-            paths = location.split('\\');
-        }
-
-        if(paths.length > 1)
-        {
-            dbdetails = paths.pop();                
-        }
-    	var retval = db.openDatabase(dbdetails,dbdetails, dbdetails, 100000);
+        db.openDatabase(dbdetails,dbdetails, dbdetails, 100000);
         db.transaction(createDB, function(){ throw new Error('Create DB Failed')})
-        return retval;
+        //return retval;
     }
 
     level.close = function(){
         var cb;
         switch(arguments.length){
+
             case 0 :
                  throw new Error("close() requires a callback argument");
             break;
+
             case 1 :
                 if(typeof arguments[0] != 'function')        
                     throw new Error("close() requires a callback argument");
@@ -95,16 +99,20 @@ exports.leveldown = function(location){
         var retval = {}
         var isbuffer = true;
         var err = {};
+        var id = "";
         switch(arguments.length){
+
             case 0 :
                  throw new Error("get() requires a callback argument");
             break;
+
             case 1 :
                 if(typeof arguments[0] != 'function')        
                     throw new Error("get() requires a callback argument");
                 else
                     cb = arguments[0]
             break;  
+
             case 2 :
                 if(typeof arguments[1] != 'function')       
                     throw new Error("get() requires a callback argument");
@@ -119,41 +127,51 @@ exports.leveldown = function(location){
                     cb = arguments[2]    
                 //Parse options    
                 if(arguments[1].asBuffer == false)
-                    isbuffer = false; 
+                    isbuffer = false;
+                    id = arguments[0]; 
             break;
         }
-
 
         //Get the data for argurments[0]
         //call the callback with that data.
         //if there is an error pass it into the callback
-
-        if(isbuffer)
-            retval = new Buffer('bar');
-        else
-            retval = 'bar';
-
-        cb(null, retval);
+        db.transaction(
+            function(tx){ 
+                getData(tx, id, function(tx, results){
+                                var retval;
+                                if(isbuffer)
+                                    retval = new Buffer(results.data);
+                                else
+                                    retval = results.data;
+                            
+                            cb(null, retval); 
+                        }, function(){ throw new Error('Get Failed'); })
+            })
+        
     }
-    
+
     level.put = function(){
         var cb;
         switch(arguments.length){
+            
             case 0 :
                  throw new Error("put() requires a callback argument");
             break;
+            
             case 1 :
                 if(typeof arguments[0] != 'function')        
                     throw new Error("put() requires a callback argument");
                 else
                     cb = arguments[0]
             break;  
+
             case 2 :
                 if(typeof arguments[1] != 'function')       
                     throw new Error("put() requires a callback argument");
                 else
                     cb = arguments[1];
             break;
+
             case 3 :
                 if(typeof arguments[2] != 'function')       
                     throw new Error("put() requires a callback argument");
@@ -188,8 +206,11 @@ exports.leveldown = function(location){
     }
 
     function createDB(tx) {
-         tx.executeSql('CREATE TABLE IF NOT EXISTS ' + dbdetails + ' (id unique, data)');
+         tx.executeSql('CREATE TABLE IF NOT EXISTS LEVELTABLE (id unique, data)');
     }
 
+    function getData(tx, id, querySuccess, errorCB){
+        tx.executeSql('SELECT * FROM LEVELTABLE WHERE id = ?', [id], querySuccess, errorCB);
+    }
 }
 

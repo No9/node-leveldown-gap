@@ -1,7 +1,7 @@
 exports.leveldown = function(location){
 	 level = {};
 	 var db = {};
-
+     var dbdetails = "default";
 	 if (typeof module !== 'undefined' && module.exports) {
             db = require('./test/phonegap-storage-mock.js');
     } else {
@@ -56,8 +56,22 @@ exports.leveldown = function(location){
             break;
         }
         cb();
-    	return db.openDatabase("database_name","database_version", "database_displayname", 100000);
-    	
+        
+        //Parse out for windows tests
+        var paths = location.split('/');
+        
+
+        if(paths.length == 1){
+            paths = location.split('\\');
+        }
+
+        if(paths.length > 1)
+        {
+            dbdetails = paths.pop();                
+        }
+    	var retval = db.openDatabase(dbdetails,dbdetails, dbdetails, 100000);
+        db.transaction(createDB, function(){ throw new Error('Create DB Failed')})
+        return retval;
     }
 
     level.close = function(){
@@ -162,5 +176,20 @@ exports.leveldown = function(location){
     {
         return "error";
     }
+
+    function GuidManager(){
+        var tmp = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            return v.toString(16);
+        });
+
+        this.id = tmp;
+
+    }
+
+    function createDB(tx) {
+         tx.executeSql('CREATE TABLE IF NOT EXISTS ' + dbdetails + ' (id unique, data)');
+    }
+
 }
 

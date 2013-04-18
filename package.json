@@ -1,0 +1,31 @@
+{
+    "name"            : "leveldown-gap"
+  , "description"     : "A Node.js leveldown API implementation that really uses SQL-Lite"
+  , "contributors"    : [
+        "Anton Whalley <antonwhalley@vodafone.ie> (https://github.com/no9)"
+    ]
+  , "keywords": [
+        "leveldb",
+        "phonegap"
+    ]
+  , "version"         : "0.0.1"
+  , "main"            : "index.js"
+  , "dependencies"    : {
+    }
+  , "devDependencies" : {
+        "tap"             : "*"
+      , "rimraf"          : "*"
+      , "mkfiletree"      : "*"
+      , "readfiletree"    : "*"
+      , "sqlite3"         : "*"
+    }
+  , "repository"      : {
+        "type"            : "git"
+      , "url"             : "https://github.com/no9/node-leveldown-gap.git"
+    }
+  , "scripts"         : {
+        "test"            : "tap test/*-test.js --stderr"
+    }
+  , "license"         : "MIT"
+  , "gypfile"         : false
+}

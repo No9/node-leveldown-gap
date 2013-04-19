@@ -6,10 +6,9 @@ var openDatabase = function(database_name, database_version, database_displaynam
 
 function tx (){
 	this.executeSql = function(sql, params, success, error){
-			var id = {};
 			var results = {};
 			results.data = 'bar';
-			success(id, results)	
+			success(this, results)	
 	}
 }
 

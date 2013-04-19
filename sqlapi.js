@@ -137,7 +137,8 @@ exports.leveldown = function(location){
         //if there is an error pass it into the callback
         db.transaction(
             function(tx){ 
-                getData(tx, id, function(tx, results){
+                getData(tx, id, 
+                    function(tx, results){
                                 var retval;
                                 if(isbuffer)
                                     retval = new Buffer(results.data);
@@ -145,7 +146,9 @@ exports.leveldown = function(location){
                                     retval = results.data;
                             
                             cb(null, retval); 
-                        }, function(){ throw new Error('Get Failed'); })
+                        }, 
+                    function(){ throw new Error('Get Failed'); })
+
             })
         
     }

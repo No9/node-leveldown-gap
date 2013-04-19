@@ -1,6 +1,6 @@
 {
     "name"            : "leveldown-gap"
-  , "description"     : "A Node.js leveldown API implementation that really uses SQL-Lite"
+  , "description"     : "A Node.js leveldown API implementation that maps to phonegap datastore API"
   , "contributors"    : [
         "Anton Whalley <antonwhalley@vodafone.ie> (https://github.com/no9)"
     ]

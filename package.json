@@ -6,25 +6,27 @@
     ]
   , "keywords": [
         "leveldb",
-        "phonegap"
+        "phonegap",
+        "leveldown"
+    
     ]
   , "version"         : "0.0.1"
   , "main"            : "index.js"
   , "dependencies"    : {
+
     }
   , "devDependencies" : {
-        "tap"             : "*"
-      , "rimraf"          : "*"
-      , "mkfiletree"      : "*"
-      , "readfiletree"    : "*"
-      , "sqlite3"         : "*"
+        "abstract-leveldown": "*",
+        "tape": "0.3.3",
+        "beefy": "*",
+        "browserify": "*"
     }
   , "repository"      : {
         "type"            : "git"
       , "url"             : "https://github.com/no9/node-leveldown-gap.git"
     }
   , "scripts"         : {
-        "test"            : "tap test/*-test.js --stderr"
+        "test"            : "node ./test.js"
     }
   , "license"         : "MIT"
   , "gypfile"         : false

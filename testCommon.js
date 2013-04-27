@@ -1,39 +1,36 @@
-const path      = require('path')
-    , fs        = require('fs')
-    , rimraf    = require('rimraf')
-    , test      = require('tap').test
-    , leveldown = require('../')
-
 var dbidx = 0
 
   , location = function () {
-      return path.join(__dirname, '_leveldown_test_db_' + dbidx++)
+      return '_leveldown_test_db_' + dbidx++
     }
 
   , lastLocation = function () {
-      return path.join(__dirname, '_leveldown_test_db_' + dbidx)
+      return '_leveldown_test_db_' + dbidx
     }
 
   , cleanup = function (callback) {
-      fs.readdir(__dirname, function (err, list) {
-        if (err) return callback(err)
-
+      indexedDB.webkitGetDatabaseNames().onsuccess = function(e, list){
+        if (!list) return callback()
+        
         list = list.filter(function (f) {
           return (/^_leveldown_test_db_/).test(f)
         })
 
-        if (!list.length)
-          return callback()
+        if (!list.length) return callback()
 
         var ret = 0
-
+        
+        function done () {
+          if (++ret == list.length)
+            callback()
+        }
+        
         list.forEach(function (f) {
-          rimraf(path.join(__dirname, f), function (err) {
-            if (++ret == list.length)
-              callback()
-          })
+          indexedDB.deleteDatabase(f)
+            .onsuccess = done
+            .onerror = done
         })
-      })
+      }
     }
 
   , setUp = function (t) {
@@ -65,7 +62,7 @@ var dbidx = 0
       next()
     }
 
-  , makeExistingDbTest = function (name, testFn) {
+  , makeExistingDbTest = function (name, test, leveldown, testFn) {
       test(name, function (t) {
         cleanup(function () {
           var loc  = location()

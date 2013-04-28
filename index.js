@@ -5,30 +5,34 @@ var util              = require('util')
   , noop              = function () {}
   , setImmediate      = global.setImmediate || process.nextTick
 
-function MemIterator (db, options) {
+function ldgapIterator (db, options) {
   AbstractIterator.call(this, db)
   this._reverse = !!options.reverse
   this._end     = options.end
   this._limit   = options.limit
   this._count   = 0
+
   if (options.start) {
-    for (var i = 0; i < this.db._keys.length; i++) {
-      if (this.db._keys[i] >= options.start) {
+    for (var i = 0; i < this.db.container.length; i++) {
+      if (this.db.container.key(i) >= options.start) {
         this._pos = i
         break
       }
     }
   } else {
-    this._pos = this._reverse ? this.db._keys.length - 1 : 0
+    this._pos = this._reverse ? this.db.container.length - 1 : 0
   }
+
+  console.dir("CALLED ldgapIterator")
 }
 
-util.inherits(MemIterator, AbstractIterator)
+util.inherits(ldgapIterator, AbstractIterator)
 
-MemIterator.prototype._next = function (callback) {
-  if (this._pos >= this.db._keys.length || this._pos < 0)
+ldgapIterator.prototype._next = function (callback) {
+	
+  if (this._pos >= this.db.container.length || this._pos < 0)
     return setImmediate(callback)
-  var key   = this.db._keys[this._pos]
+  var key   = this.db.container.key(this._pos)
     , value
 
   if (!!this._end && (this._reverse ? key < this._end : key > this._end))
@@ -38,7 +42,7 @@ MemIterator.prototype._next = function (callback) {
   if (!!this._limit && this._limit > 0 && this._count++ >= this._limit)
     return setImmediate(callback)
 
-  value = this.db._store['$' + key]
+  value = this.db.container.getItem(key) 
   this._pos += this._reverse ? -1 : 1
 
   setImmediate(callback.bind(null, null, key, value))
@@ -128,7 +132,7 @@ ldgap.prototype._batch = function (array, options, callback) {
 }
 
 ldgap.prototype._iterator = function (options) {
-  return new MemIterator(this, options)
+  return new ldgapIterator(this, options)
 }
 
 module.exports = ldgap

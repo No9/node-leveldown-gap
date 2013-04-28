@@ -9,6 +9,9 @@ var dbidx = 0
     }
 
   , cleanup = function (callback) {
+
+  	  return callback();
+      //TODO indexDB needs replacing with something else
       indexedDB.webkitGetDatabaseNames().onsuccess = function(e, list){
         if (!list) return callback()
         

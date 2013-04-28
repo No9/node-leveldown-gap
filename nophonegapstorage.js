@@ -6,7 +6,7 @@ function localStorage(){
 
 //key: Returns the name of the key at the position specified.
 localStorage.prototype.key = function (keyindex){
-    	return keys[keyindex];
+    	return this._keys[keyindex];
 }
 
 //setItem: Saves and item at the key provided.

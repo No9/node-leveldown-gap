@@ -44,46 +44,43 @@ MemIterator.prototype._next = function (callback) {
   setImmediate(callback.bind(null, null, key, value))
 }
 
-function MemDOWN (location) {
+function ldgap (location) {
   AbstractLevelDOWN.call(this, location)
-  this._store = {}
-  this._keys  = []
 
   if (typeof module !== 'undefined' && module.exports) {
-    
-            this.container = require('./nophonegapstorage');
-    
+  			  
+            			var store = require('./nophonegapstorage').localStorage; 
+			this.container = new store();
+
     } else {
     	
     	if(window.PhoneGap){
 		
-			this.container = window;
+			this.container = window.localStorage;
 		
 		}else{
-		
-			this.container = require('./nophonegapstorage');
+			var store = require('./nophonegapstorage').localStorage; 
+			this.container = new store();
 		
 		}
             
     }
 }		
 
-util.inherits(MemDOWN, AbstractLevelDOWN)
+util.inherits(ldgap, AbstractLevelDOWN)
 
-MemDOWN.prototype._open = function (options, callback) {
+ldgap.prototype._open = function (options, callback) {
   setImmediate(function () { callback(null, this) }.bind(this))
 }
 
-MemDOWN.prototype._put = function (key, value, options, callback) {
-  this._keys.push(key)
-  this._keys.sort()
-  key = '$' + key // safety, to avoid key='__proto__'-type skullduggery 
-  this._store[key] = value
+ldgap.prototype._put = function (key, value, options, callback) {
+  this.container.setItem(key, value);  
   setImmediate(callback)
 }
 
-MemDOWN.prototype._get = function (key, options, callback) {
-  var value = this._store['$' + key]
+ldgap.prototype._get = function (key, options, callback) {
+  
+  var value = this.container.getItem(key);
   if (value === undefined) {
     // 'NotFound' error, consistent with LevelDOWN API
     return setImmediate(function () { callback(new Error('NotFound')) })
@@ -95,18 +92,19 @@ MemDOWN.prototype._get = function (key, options, callback) {
   })
 }
 
-MemDOWN.prototype._del = function (key, options, callback) {
-  for (var i = 0; i < this._keys.length; i++) {
+ldgap.prototype._del = function (key, options, callback) {
+  for (var i = 0; i < this.container.length; i++) {
     if (this._keys[i] == key) {
       this._keys.splice(i, 1)
       break;
     }
   }
-  delete this._store['$' + key]
+
+  this.container.removeItem(key); 
   setImmediate(callback)
 }
 
-MemDOWN.prototype._batch = function (array, options, callback) {
+ldgap.prototype._batch = function (array, options, callback) {
   var err
     , i = 0
   if (Array.isArray(array)) {
@@ -129,8 +127,8 @@ MemDOWN.prototype._batch = function (array, options, callback) {
   setImmediate(callback)
 }
 
-MemDOWN.prototype._iterator = function (options) {
+ldgap.prototype._iterator = function (options) {
   return new MemIterator(this, options)
 }
 
-module.exports = MemDOWN
+module.exports = ldgap

@@ -26,7 +26,7 @@
       , "url"             : "https://github.com/no9/node-leveldown-gap.git"
     }
   , "scripts"         : {
-        "test"            : "node ./test.js"
+        "start"       : "beefy test.js"
     }
   , "license"         : "MIT"
   , "gypfile"         : false

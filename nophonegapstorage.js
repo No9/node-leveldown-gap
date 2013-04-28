@@ -1,5 +1,4 @@
 function localStorage(){
-
 	this._store = {}
   	this._keys  = []
 }

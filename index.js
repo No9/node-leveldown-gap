@@ -6,24 +6,25 @@ var util              = require('util')
   , setImmediate      = global.setImmediate || process.nextTick
 
 function ldgapIterator (db, options) {
+
+
   AbstractIterator.call(this, db)
+  this._dbsize = this.db.container.length();
   this._reverse = !!options.reverse
   this._end     = options.end
   this._limit   = options.limit
   this._count   = 0
 
   if (options.start) {
-    for (var i = 0; i < this.db.container.length; i++) {
+    for (var i = 0; i < this._dbsize; i++) {
       if (this.db.container.key(i) >= options.start) {
         this._pos = i
         break
       }
     }
   } else {
-    this._pos = this._reverse ? this.db.container.length - 1 : 0
+    this._pos = this._reverse ? this._dbsize - 1 : 0
   }
-
-  console.dir("CALLED ldgapIterator")
 }
 
 util.inherits(ldgapIterator, AbstractIterator)
@@ -53,7 +54,7 @@ function ldgap (location) {
 
   if (typeof module !== 'undefined' && module.exports) {
   			  
-            			var store = require('./nophonegapstorage').localStorage; 
+      var store = require('./nophonegapstorage').localStorage; 
 			this.container = new store();
 
     } else {

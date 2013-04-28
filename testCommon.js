@@ -52,12 +52,13 @@ var dbidx = 0
         , next = function () {
             iterator.next(function (err, key, value) {
               if (err) return callback(err)
-              if (!arguments.length) {
+              if ((!arguments.length) || (key === undefined)) {
                 return iterator.end(function (err) {
                   callback(err, data)
                 })
               }
               if (key == +key) key = +key
+              
               data.push({ key: key, value: value })
               process.nextTick(next)
             })

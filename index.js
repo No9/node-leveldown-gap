@@ -9,19 +9,46 @@ function ldgapIterator (db, options) {
 
 
   AbstractIterator.call(this, db)
+  var emptybuffer = new Buffer(0)
+
   this._dbsize = this.db.container.length();
   this._reverse = !!options.reverse
-  this._end     = options.end
+  
+  // Test for empty buffer in end
+  if(options.end instanceof Buffer){
+    if(options.end.length = 0)
+      this._end = this.db.container.key(this._dbsize - 1)
+  }else{  
+    this._end = options.end
+  }
+
   this._limit   = options.limit
   this._count   = 0
 
   if (options.start) {
+    // if pos is more than the size of the database then set pos to the end               
+    var found = false;
     for (var i = 0; i < this._dbsize; i++) {
       if (this.db.container.key(i) >= options.start) {
-        this._pos = i
+          this._pos = i
+          //Make sure we step back for mid values e.g 49.5 test
+          if(this._reverse){
+            if(this.db.container.key(i) > options.start){
+              this._pos = i -1          
+            }else{
+              this._pos = i
+            }
+          }
+        found = true;
         break
+
       }
     }
+
+    if(!found){
+      this._pos = this._reverse ? this._dbsize - 1 : 0   
+    }
+
   } else {
     this._pos = this._reverse ? this._dbsize - 1 : 0
   }

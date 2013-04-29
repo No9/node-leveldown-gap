@@ -79,40 +79,39 @@ ldgapIterator.prototype._next = function (callback) {
 function ldgap (location) {
   AbstractLevelDOWN.call(this, location)
 
-  if (typeof module !== 'undefined' && module.exports) {
-  			  
-      var store = require('./nophonegapstorage').localStorage; 
-			this.container = new store();
+  if(window.localStorage){
+    console.dir("Using browser localStorage")    
+    var wstore = require('./localstorage').localStorage;
+    this.container = new wstore();
 
-    } else {
-    	
-    	if(window.PhoneGap){
-		
-			this.container = window.localStorage;
-		
-		}else{
-			var store = require('./nophonegapstorage').localStorage; 
-			this.container = new store();
-		
-		}
-            
-    }
+   }else{
+    // Default to in memory
+		console.dir("Using inmemory localStorage")
+    var store = require('./inmemory').localStorage; 
+		this.container = new store();
+	 }      
+    /*console.dir("Using inmemory localStorage")
+    var store = require('./inmemory').localStorage; 
+    this.container = new store();*/   
 }		
 
 util.inherits(ldgap, AbstractLevelDOWN)
 
 ldgap.prototype._open = function (options, callback) {
   setImmediate(function () { callback(null, this) }.bind(this))
+  
 }
 
 ldgap.prototype._put = function (key, value, options, callback) {
   this.container.setItem(key, value);  
+  
   setImmediate(callback)
 }
 
 ldgap.prototype._get = function (key, options, callback) {
   
   var value = this.container.getItem(key);
+
   if (value === undefined) {
     // 'NotFound' error, consistent with LevelDOWN API
     return setImmediate(function () { callback(new Error('NotFound')) })
@@ -126,8 +125,8 @@ ldgap.prototype._get = function (key, options, callback) {
 
 ldgap.prototype._del = function (key, options, callback) {
   for (var i = 0; i < this.container.length; i++) {
-    if (this._keys[i] == key) {
-      this._keys.splice(i, 1)
+    if (this.container.key(i) == key) {
+        this.container.removeItem(i);
       break;
     }
   }

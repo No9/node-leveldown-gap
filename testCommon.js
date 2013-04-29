@@ -10,7 +10,12 @@ var dbidx = 0
 
   , cleanup = function (callback) {
 
-  	  return callback();
+      if(window.localStorage){
+          window.localStorage.clear()
+          console.dir("CLEANING UP")
+      } 
+  	  
+      return callback();
       //TODO indexDB needs replacing with something else
       indexedDB.webkitGetDatabaseNames().onsuccess = function(e, list){
         if (!list) return callback()
@@ -52,7 +57,7 @@ var dbidx = 0
         , next = function () {
             iterator.next(function (err, key, value) {
               if (err) return callback(err)
-              if ((!arguments.length) || (key === undefined)) {
+              if ((!arguments.length) || (key === undefined) || (key === null)) {
                 return iterator.end(function (err) {
                   callback(err, data)
                 })

@@ -14,9 +14,10 @@
   , "main"            : "index.js"
   , "dependencies"    : {
 
+       
     } 
-  , "bundleDependencies" : {
-        "abstract-leveldown": "git@github.com:No9/node-abstract-leveldown.git",
+  , "devDependencies" : {
+        "abstract-leveldown": "git://github.com/No9/node-abstract-leveldown.git#master",
         "tape": "0.3.3",
         "beefy": "*",
         "browserify": "*"

@@ -1,4 +1,4 @@
-function localStorage(){
+function memStorage(){
 	this._store = {}
   	this._keys  = []
 }
@@ -36,4 +36,4 @@ localStorage.prototype.length = function(){
 	return this._keys.length;
 }
 
-exports.localStorage = localStorage;
+exports.localStorage = memStorage;

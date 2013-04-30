@@ -1,10 +1,13 @@
 # node-leveldown-gap
 
-A leveldown implementation for Phonegap the idea is to be able to use the sync technology in the level stack on a phone.
-There are a couple of scenarios.
+A leveldown implementation for Phonegap the idea is to be able to use the 
+sync technology in the level stack on a phone in a couple of scenarios.
+
 1. Occasionally connected clients
+
 2. Adhoc Networks where clients need to sync with each other.  
 
+This project is designed to be used with [https://github.com/No9/fija](https://github.com/No9/fija)
 
 ## Install 
 
@@ -13,19 +16,13 @@ There are a couple of scenarios.
 ```
 ## Test 
 
+[![browser support](https://ci.testling.com/no9/node-leveldown-gap.png)](https://ci.testling.com/no9/node-leveldown-gap)
+
 ```
 	beefy test
 ```
 Browse to http://localhost:9966/ 
 View console logs in the browser to see test output. 
-
-## Status 
-Tested against a mock in-memory service implementation using browserify and tape. 
-All tests pass. 
-
-
-## TODO
-Implement integration tests for phonegap  
 
 ## License
 

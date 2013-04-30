@@ -2,7 +2,7 @@ function localStorage(){
 	this._keys  = [];
 
 	for (var i = 0; i < window.localStorage.length; i++){
-    	this._keys.push('$' + window.localStorage.key(keyindex))
+    	this._keys.push('$' + window.localStorage.key(i))
     }
     this._keys.sort();
 }

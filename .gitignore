@@ -34,4 +34,4 @@ results
 
 npm-debug.log
 #Including node_modules until abstract-leveldown patch lands
-#node_modules
+node_modules

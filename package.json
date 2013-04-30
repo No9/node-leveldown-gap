@@ -15,12 +15,12 @@
   , "dependencies"    : {
 
     }
-  , "devDependencies" : {
+  ,"bundleDependencies" {
         "abstract-leveldown": "*",
         "tape": "0.3.3",
         "beefy": "*",
         "browserify": "*"
-    }
+  }
   , "repository"      : {
         "type"            : "git"
       , "url"             : "https://github.com/no9/node-leveldown-gap.git"

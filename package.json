@@ -1,6 +1,6 @@
 {
     "name"            : "leveldown-gap"
-  , "description"     : "A Node.js leveldown API implementation that maps to phonegap datastore API"
+  , "description"     : "A Node.js and browserify leveldown API implementation that maps to phonegap datastore API"
   , "contributors"    : [
         "Anton Whalley <antonwhalley@vodafone.ie> (https://github.com/no9)"
     ]
@@ -25,8 +25,11 @@
         "type"            : "git"
       , "url"             : "https://github.com/no9/node-leveldown-gap.git"
     }
-    
-  ,"testling": { "files": "test.js", "browsers": ["iexplore/8.0","iexplore/10.0","iexplore/9.0","chrome/23.0","chrome/24.0","chrome/25.0","firefox/17.0","firefox/18.0","firefox/19.0", "opera/11.5","opera/11.6","opera/12.0","safari/4.0","safari/5.0.5","safari/5.1","firefox/nightly","opera/next","chrome/canary","iphone/6.0","ipad/6.0","safari/6.0","android-browser/4.2"]}
+
+  ,"testling": { 
+        "files": ["tests/test.js"], 
+        "browsers": ["iexplore/8.0","iexplore/10.0","iexplore/9.0","chrome/23.0","chrome/24.0","chrome/25.0","firefox/17.0","firefox/18.0","firefox/19.0", "opera/11.5","opera/11.6","opera/12.0","safari/4.0","safari/5.0.5","safari/5.1","firefox/nightly","opera/next","chrome/canary","iphone/6.0","ipad/6.0","safari/6.0","android-browser/4.2"]
+      }
 
   , "license"         : "MIT"
   , "gypfile"         : false

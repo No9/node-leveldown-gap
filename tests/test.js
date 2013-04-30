@@ -1,5 +1,5 @@
 var tape   = require('tape')
-  , leveldown = require('./')
+  , leveldown = require('../')
   , factory = function (location) {
   		
       return new leveldown(location)  

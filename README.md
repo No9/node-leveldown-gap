@@ -1,26 +1,86 @@
 # node-leveldown-gap
 
-A leveldown implementation for Phonegap the idea is to be able to use the 
-sync technology in the level stack on a phone in a couple of scenarios.
+A leveldown implementation for Phonegap and the browser.
+The idea is to be able to use the sync technology in the level stack on a phone.
+
+The scenarios envisaged are : 
 
 1. Occasionally connected clients
 
-2. Adhoc Networks where clients need to sync with each other.  
+2. Adhoc Networks where clients need to sync directly with each other.  
 
-This project is designed to be used with [https://github.com/No9/fija](https://github.com/No9/fija)
+This project is standalone but fits well with [fija](https://github.com/No9/fija) and [levelup](https://github.com/rvagg/node-levelup)
 
-## Install 
-
-```
-	git clone git@github.com:No9/node-leveldown-gap.git
-```
-## Test 
+## Status 
 
 [![browser support](https://ci.testling.com/no9/node-leveldown-gap.png)](https://ci.testling.com/no9/node-leveldown-gap)
 
+## Install
+
 ```
-	beefy test
+	npm install leveldown-gap
 ```
+
+## Example 
+
+At the command prompt in your chosen directory : 
+
+```
+npm install leveldown-gap 
+npm install levelup 
+npm install beefy -g
+npm install browserify -g
+```
+
+Create a file called index.js and enter the following:
+
+```
+var leveldowngap = require('leveldown-gap')
+  , levelup = require('levelup')
+  , factory = function (location) { return new leveldowngap(location) }
+  , db = levelup('/does/not/matter', { db: factory })
+
+db.put('name', 'Yuri Irsenovich Kim')
+db.put('dob', '16 February 1941')
+db.put('spouse', 'Kim Young-sook')
+db.put('occupation', 'Clown')
+
+db.readStream()
+   .on('data', function (data) {
+      if(typeof data.value !== 'undefined') 
+         console.log(data.key, '=', data.value)
+   })
+   .on('error', function (err) {
+      console.log('Oh my!', err)
+   })
+   .on('close', function () {
+      console.log('Stream closed')
+   })
+   .on('end', function () {
+     console.log('Stream ended')
+   })
+```
+
+Publish the site :
+
+```
+beefy index.js
+```
+
+See the output :
+
+(http://localhost:9966)[http://localhost:9966]
+
+Listen to John Cage :
+
+http://www.youtube.com/watch?v=ExUosomc8Uc 
+
+## Tests
+
+```
+	beefy tests/test
+```
+
 Browse to http://localhost:9966/ 
 View console logs in the browser to see test output. 
 

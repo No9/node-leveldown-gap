@@ -12,7 +12,6 @@ var dbidx = 0
 
       if(window.localStorage){
           window.localStorage.clear()
-          console.dir("CLEANING UP")
       } 
   	  
       return callback();

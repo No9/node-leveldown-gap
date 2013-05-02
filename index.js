@@ -110,6 +110,11 @@ ldgap.prototype._put = function (key, value, options, callback) {
 
 ldgap.prototype._get = function (key, options, callback) {
   
+  var err = checkKeyValue(key, 'key')
+
+  if (err) return callback(err)
+  if (!isBuffer(key)) key = String(key)
+
   var value = this.container.getItem(key);
 
   if (value === undefined) {
@@ -202,5 +207,10 @@ if(!window.Uint8Array){
   window.Uint32Array = TypedArray;
   window.Int32Array = TypedArray;
 }
+
+function isBuffer(buf) {
+  return buf instanceof ArrayBuffer
+}
+
 
 module.exports = ldgap

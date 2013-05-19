@@ -18,6 +18,12 @@ require('abstract-leveldown/abstract/put-get-del-test').all(factory, tape, testC
 require('abstract-leveldown/abstract/close-test').close(factory, tape, testCommon)
 require('abstract-leveldown/abstract/iterator-test').all(factory, tape, testCommon)
 
+require('abstract-leveldown/abstract/chained-batch-test').all(factory, tape, testCommon)
+require('abstract-leveldown/abstract/approximate-size-test').setUp(factory, tape, testCommon)
+require('abstract-leveldown/abstract/approximate-size-test').args(factory, tape, testCommon)
+
+
+
 function subarray(start, end) {
 	return this.slice(start, end)
 }

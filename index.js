@@ -1,7 +1,6 @@
 var util              = require('util')
   , AbstractLevelDOWN = require('abstract-leveldown').AbstractLevelDOWN
   , AbstractIterator  = require('abstract-leveldown').AbstractIterator
-  , checkKeyValue     = require('abstract-leveldown').checkKeyValue
   , noop              = function () {}
   , setImmediate      = global.setImmediate || process.nextTick
 
@@ -73,26 +72,13 @@ ldgapIterator.prototype._next = function (callback) {
   value = this.db.container.getItem(key) 
   this._pos += this._reverse ? -1 : 1
 
-  setImmediate(callback.bind(null, null, key, value))
+  setImmediate(callback.bind(null, undefined, key, value))
 }
 
 function ldgap (location) {
   AbstractLevelDOWN.call(this, location)
-
-  if(window.localStorage){
-    console.dir("Using browser localStorage")    
-    var wstore = require('./localstorage').localStorage;
-    this.container = new wstore();
-
-   }else{
-    // Default to in memory
-		console.dir("Using inmemory localStorage")
-    var store = require('./inmemory').localStorage; 
-		this.container = new store();
-	 }      
-    /*console.dir("Using inmemory localStorage")
-    var store = require('./inmemory').localStorage; 
-    this.container = new store();*/   
+  var wstore = require('./localstorage').localStorage;
+  this.container = new wstore(location);
 }		
 
 util.inherits(ldgap, AbstractLevelDOWN)
@@ -103,18 +89,27 @@ ldgap.prototype._open = function (options, callback) {
 }
 
 ldgap.prototype._put = function (key, value, options, callback) {
+
+  var err = checkKeyValue(key, 'key')
+
+  if (err) return callback(err)
+  
+  
+
   this.container.setItem(key, value);  
   
   setImmediate(callback)
 }
 
 ldgap.prototype._get = function (key, options, callback) {
-  
+
   var err = checkKeyValue(key, 'key')
 
   if (err) return callback(err)
-  if (!isBuffer(key)) key = String(key)
-
+  
+  if (!isBuffer(key)){
+    key = String(key)
+  }
   var value = this.container.getItem(key);
 
   if (value === undefined) {
@@ -129,12 +124,17 @@ ldgap.prototype._get = function (key, options, callback) {
 }
 
 ldgap.prototype._del = function (key, options, callback) {
-  for (var i = 0; i < this.container.length; i++) {
+  /*for (var i = 0; i < this.container.length; i++) {
     if (this.container.key(i) == key) {
         this.container.removeItem(i);
       break;
     }
-  }
+  }*/
+  
+  var err = checkKeyValue(key, 'key')
+
+  if (err) return callback(err)
+  if (!isBuffer(key)) key = String(key)
 
   this.container.removeItem(key); 
   setImmediate(callback)
@@ -143,6 +143,8 @@ ldgap.prototype._del = function (key, options, callback) {
 ldgap.prototype._batch = function (array, options, callback) {
   var err
     , i = 0
+    , key 
+    , value
   if (Array.isArray(array)) {
     for (; i < array.length; i++) {
       if (array[i]) {
@@ -210,6 +212,25 @@ if(!window.Uint8Array){
 
 function isBuffer(buf) {
   return buf instanceof ArrayBuffer
+}
+
+function checkKeyValue (obj, type) {
+  if (obj === null || obj === undefined)
+    return new Error(type + ' cannot be `null` or `undefined`')
+  if (obj === null || obj === undefined)
+    return new Error(type + ' cannot be `null` or `undefined`')
+
+  if(+obj.indexOf("[object ArrayBuffer]") == 0){
+    if(obj.byteLength == 0 || obj.byteLength == undefined)
+      return new Error('key cannot be an empty ArrayBuffer') 
+  }  
+  
+
+  if (isBuffer(obj)) {
+    if (obj.length === 0)
+      return new Error(type + ' cannot be an empty Buffer')
+  } else if (String(obj) === '')
+    return new Error(type + ' cannot be an empty String')
 }
 
 

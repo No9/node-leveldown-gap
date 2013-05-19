@@ -11,10 +11,10 @@
         "levelup"
     
     ]
-  , "version"         : "0.0.1"
+  , "version"         : "0.1.0"
   , "main"            : "index.js"
   , "dependencies"    : {
-      "abstract-leveldown": "git://github.com/No9/node-abstract-leveldown.git#master"
+      "abstract-leveldown": "0.7.1"
     } 
   , "devDependencies" : {
         

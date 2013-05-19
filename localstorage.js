@@ -52,7 +52,6 @@ localStorage.prototype.removeItem = function (key){
 	
 	for(var i = this._keys.length; i >= 0; i--) {
     	if(this._keys[i] === key) {
-	       console.log("KEY TO DELETE " + key)
 	       this._keys.splice(i, 1);
 		   window.localStorage.removeItem(key);		
     	}

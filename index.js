@@ -93,8 +93,10 @@ ldgap.prototype._put = function (key, value, options, callback) {
   var err = checkKeyValue(key, 'key')
 
   if (err) return callback(err)
-  
-  
+
+  err = checkKeyValue(value, 'value')
+
+  if (err) return callback(err)
 
   this.container.setItem(key, value);  
   
@@ -124,12 +126,6 @@ ldgap.prototype._get = function (key, options, callback) {
 }
 
 ldgap.prototype._del = function (key, options, callback) {
-  /*for (var i = 0; i < this.container.length; i++) {
-    if (this.container.key(i) == key) {
-        this.container.removeItem(i);
-      break;
-    }
-  }*/
   
   var err = checkKeyValue(key, 'key')
 
@@ -219,10 +215,10 @@ function checkKeyValue (obj, type) {
     return new Error(type + ' cannot be `null` or `undefined`')
   if (obj === null || obj === undefined)
     return new Error(type + ' cannot be `null` or `undefined`')
-
+  
   if(+obj.indexOf("[object ArrayBuffer]") == 0){
     if(obj.byteLength == 0 || obj.byteLength == undefined)
-      return new Error('key cannot be an empty ArrayBuffer') 
+      return new Error(type + ' cannot be an empty ArrayBuffer') 
   }  
   
 
@@ -232,6 +228,7 @@ function checkKeyValue (obj, type) {
   } else if (String(obj) === '')
     return new Error(type + ' cannot be an empty String')
 }
+
 
 
 module.exports = ldgap

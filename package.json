@@ -18,9 +18,7 @@
     } 
   , "devDependencies" : {
         
-        "tape": "0.3.3",
-        "beefy": "*",
-        "browserify": "*"
+        "tape": "1.0.2"
     }
   , "repository"      : {
         "type"            : "git"

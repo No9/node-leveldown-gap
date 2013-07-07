@@ -23,6 +23,8 @@ localStorage.prototype.key = function (keyindex){
 localStorage.prototype.setItem = function (key, value){    	
     	key = this._partition + "!" + key;
     	
+    	
+    	
     	for (var i = 0; i < this._keys.length; i++) {
 	        if (this._keys[i] === key) {
 	            window.localStorage.setItem(key, value);

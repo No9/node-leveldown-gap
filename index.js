@@ -98,8 +98,14 @@ ldgap.prototype._put = function (key, value, options, callback) {
 
   if (err) return callback(err)
 
-  this.container.setItem(key, value);  
-  
+  if(typeof value == 'object' && value.buffer == undefined){
+        var obj = {};
+        obj.storetype = "json";
+        obj.data = value; 
+        value = JSON.stringify(obj)
+  } 
+
+  this.container.setItem(key, value);
   setImmediate(callback)
 }
 
@@ -118,8 +124,20 @@ ldgap.prototype._get = function (key, options, callback) {
     // 'NotFound' error, consistent with LevelDOWN API
     return setImmediate(function () { callback(new Error('NotFound')) })
   }
-  if (options.asBuffer !== false && !Buffer.isBuffer(value))
+
+  
+  if (options.asBuffer !== false && !Buffer.isBuffer(value)){
     value = new Buffer(String(value))
+  }
+
+
+  if(options.asBuffer === false){
+    if(value.indexOf("{\"storetype\":\"json\",\"data\"") > -1){
+      var res = JSON.parse(value);
+      value = res.data;
+    }
+  }
+
   setImmediate(function () {
     callback(null, value)
   })
@@ -216,10 +234,24 @@ function checkKeyValue (obj, type) {
   if (obj === null || obj === undefined)
     return new Error(type + ' cannot be `null` or `undefined`')
   
-  if(+obj.indexOf("[object ArrayBuffer]") == 0){
-    if(obj.byteLength == 0 || obj.byteLength == undefined)
-      return new Error(type + ' cannot be an empty ArrayBuffer') 
-  }  
+  if(type === 'key'){
+    
+    if(obj instanceof Boolean){
+      return new Error(type + ' cannot be `null` or `undefined`')    
+    }
+  }
+
+  if(obj.toString().indexOf("[object ArrayBuffer]") == 0){
+      if(obj.byteLength == 0 || obj.byteLength == undefined){
+        return new Error(type + ' cannot be an empty ArrayBuffer') 
+      }  
+  } 
+  
+  /*if(obj.toString().indexOf("[object Uint8Array]") == 0){
+      if(obj.byteLength == 0 || obj.byteLength == undefined){
+        return new Error(type + ' cannot be an empty ArrayBuffer') 
+      }  
+  } */
   
 
   if (isBuffer(obj)) {

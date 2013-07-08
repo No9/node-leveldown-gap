@@ -43,9 +43,8 @@ function ldgapIterator (db, options) {
 
       }
     }
-
     if(!found){
-      this._pos = this._reverse ? this._dbsize - 1 : 0   
+      this._pos = this._reverse ? this._dbsize - 1 : -1   
     }
 
   } else {

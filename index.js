@@ -121,7 +121,7 @@ ldgap.prototype._get = function (key, options, callback) {
 
   if (value === undefined) {
     // 'NotFound' error, consistent with LevelDOWN API
-    return setImmediate(function () { callback(new Error('NotFound')) })
+    return setImmediate(function () { callback(new Error('NotFound: ')) })
   }
 
   
@@ -181,6 +181,14 @@ ldgap.prototype._batch = function (array, options, callback) {
 ldgap.prototype._iterator = function (options) {
   return new ldgapIterator(this, options)
 }
+/*
+
+(function() {
+ console.log("Hello")
+})
+*/
+
+
 
 function subarray(start, end) {
   return this.slice(start, end)
@@ -217,11 +225,11 @@ var result;
 
 }
 
-if(!window.Uint8Array){ 
+//if(!window.Uint8Array){ 
   window.Uint8Array = TypedArray;
   window.Uint32Array = TypedArray;
   window.Int32Array = TypedArray;
-}
+//}
 
 function isBuffer(buf) {
   return buf instanceof ArrayBuffer
@@ -238,11 +246,18 @@ function checkKeyValue (obj, type) {
     if(obj instanceof Boolean){
       return new Error(type + ' cannot be `null` or `undefined`')    
     }
+    if(obj === ''){
+      return new Error(type + ' cannot be empty')
+    }
+/*
+    if(isBuffer(obj)) {
+      
+      return new Error(type + 'cannot be an empty Buffer')
+    }*/
   }
-
   if(obj.toString().indexOf("[object ArrayBuffer]") == 0){
       if(obj.byteLength == 0 || obj.byteLength == undefined){
-        return new Error(type + ' cannot be an empty ArrayBuffer') 
+        return new Error(type + ' cannot be an empty Buffer') 
       }  
   } 
   
@@ -251,9 +266,9 @@ function checkKeyValue (obj, type) {
         return new Error(type + ' cannot be an empty ArrayBuffer') 
       }  
   } */
-  
-
   if (isBuffer(obj)) {
+    
+    console.log("Buffer " +obj)
     if (obj.length === 0)
       return new Error(type + ' cannot be an empty Buffer')
   } else if (String(obj) === '')

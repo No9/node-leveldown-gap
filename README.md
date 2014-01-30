@@ -1,4 +1,11 @@
-# node-leveldown-gap
+# node-leveldown-gap (mothballed)
+
+This repo is dormant and is *NOT* being actively maintained. 
+
+For reasons see [this issue](https://github.com/No9/node-leveldown-gap/issues/1)
+
+The functioning localstorage code is at [https://github.com/No9/localstorage-down](https://github.com/No9/localstorage-down)
+and is being maintained for mobile and desktop browsers.
 
 A leveldown implementation for Phonegap and the browser.
 The idea is to be able to use the sync technology in the level stack on a phone.
@@ -18,7 +25,7 @@ This project is standalone but fits well with [fija](https://github.com/No9/fija
 ## Install
 
 ```
-	npm install leveldown-gap
+	npm install leveldown-gap 
 ```
 
 ## Example 
